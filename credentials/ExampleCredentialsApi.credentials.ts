@@ -5,9 +5,9 @@ import {
 	INodeProperties,
 } from 'n8n-workflow';
 
-export class ExampleCredentialsApi implements ICredentialType {
-	name = 'exampleCredentialsApi';
-	displayName = 'Example Credentials API';
+export class GhModelsNodeCredentialsApi implements ICredentialType {
+	name = 'ghModelsNodeCredentialsApi';
+	displayName = 'Github Models Credentials API';
 
 	documentationUrl = 'https://your-docs-url';
 
@@ -16,19 +16,14 @@ export class ExampleCredentialsApi implements ICredentialType {
 		// Properties can be defined exactly in the same way
 		// as node properties.
 		{
-			displayName: 'User Name',
-			name: 'username',
+			displayName: 'Github Token',
+			name: 'githubToken',
 			type: 'string',
 			default: '',
-		},
-		{
-			displayName: 'Password',
-			name: 'password',
-			type: 'string',
 			typeOptions: {
 				password: true,
 			},
-			default: '',
+			required: true
 		},
 	];
 
@@ -38,14 +33,9 @@ export class ExampleCredentialsApi implements ICredentialType {
 	authenticate: IAuthenticateGeneric = {
 		type: 'generic',
 		properties: {
-			auth: {
-				username: '={{ $credentials.username }}',
-				password: '={{ $credentials.password }}',
-			},
-			qs: {
-				// Send this as part of the query string
-				n8n: 'rocks',
-			},
+			headers: {
+				'Authorization': 'Bearer {{ $credentials.apiKey }}',
+			}
 		},
 	};
 
