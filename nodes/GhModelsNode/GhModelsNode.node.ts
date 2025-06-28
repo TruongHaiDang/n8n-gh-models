@@ -10,8 +10,9 @@ export class GhModelsNode implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Github Models',
 		name: 'ghModelsNode',
+		icon: 'file:ghModelsNode.svg',
 		group: ['HaiDang'],
-		version: 1,
+		version: 1.0,
 		description: 'This node encapsulates the functionality for the github models API.',
 		defaults: {
 			name: 'GH Models Node',
@@ -207,6 +208,13 @@ export class GhModelsNode implements INodeType {
 					},
 				],
 			},
+			{
+				displayName: 'Output as JSON',
+				name: 'json_format',
+				default: false,
+				description: "Model will send output as a JSON data.",
+				type: 'boolean'
+			}
 		],
 	};
 
