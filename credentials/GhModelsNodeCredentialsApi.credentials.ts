@@ -9,7 +9,7 @@ export class GhModelsNodeCredentialsApi implements ICredentialType {
 	name = 'ghModelsNodeCredentialsApi';
 	displayName = 'Github Models Credentials API';
 
-	documentationUrl = 'https://your-docs-url';
+	documentationUrl = 'https://qkxlimfz.manus.space/';
 
 	properties: INodeProperties[] = [
 		// The credentials to get from user and save encrypted.
