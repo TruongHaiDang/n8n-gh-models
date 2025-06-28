@@ -21,6 +21,12 @@ export class GhModelsNode implements INodeType {
 		inputs: [NodeConnectionType.Main],
 		outputs: [NodeConnectionType.Main],
 		usableAsTool: true,
+		credentials: [
+			{
+				name: 'ghModelsNodeCredentialsApi', // phải khớp với `name` trong file credentials
+				required: true,
+			},
+		],
 		properties: [
 			// Node properties which the user gets displayed and
 			// can change on the node.
