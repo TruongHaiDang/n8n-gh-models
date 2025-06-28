@@ -23,7 +23,7 @@ export class GhModelsNodeCredentialsApi implements ICredentialType {
 			typeOptions: {
 				password: true,
 			},
-			required: true
+			required: true,
 		},
 	];
 
@@ -34,8 +34,8 @@ export class GhModelsNodeCredentialsApi implements ICredentialType {
 		type: 'generic',
 		properties: {
 			headers: {
-				'Authorization': 'Bearer {{ $credentials.apiKey }}',
-			}
+				Authorization: 'Bearer {{ $credentials.githubToken }}',
+			},
 		},
 	};
 

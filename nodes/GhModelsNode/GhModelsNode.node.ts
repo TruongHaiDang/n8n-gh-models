@@ -5,6 +5,7 @@ import type {
 	INodeTypeDescription,
 } from 'n8n-workflow';
 import { NodeConnectionType, NodeOperationError } from 'n8n-workflow';
+import axios from 'axios';
 
 export class GhModelsNode implements INodeType {
 	description: INodeTypeDescription = {
@@ -29,81 +30,69 @@ export class GhModelsNode implements INodeType {
 				type: 'options',
 				options: [
 					{
-						name: 'OpenAI o4-mini',
-						value: 'openai/o4-mini',
-						description:
-							'o4-mini includes significant improvements on quality and safety while supporting the existing features of o3-mini and delivering...',
-					},
-					{
-						name: 'OpenAI o3',
-						value: 'openai/o3',
-						description:
-							'o3 includes significant improvements on quality and safety while supporting the existing features of o1 and delivering comparable ...',
-					},
-					{
-						name: 'OpenAI GPT-4.1-mini',
-						value: 'openai/gpt-4.1-mini',
-						description:
-							'gpt-4.1-mini outperform gpt-4o-mini across the board, with major gains in coding, instruction following, and long-context handling.',
-					},
-					{
-						name: 'OpenAI GPT-4.1-nano',
-						value: 'openai/gpt-4.1-nano',
-						description:
-							'gpt-4.1-nano provides gains in coding, instruction following, and long-context handling along with lower latency and cost.',
-					},
-					{
 						name: 'OpenAI GPT-4.1',
 						value: 'openai/gpt-4.1',
-						description:
-							'gpt-4.1 outperforms gpt-4o across the board, with major gains in coding, instruction following, and long-context understanding.',
+						description: 'Gpt-4.1 outperforms gpt-4o across the board, with major gains in coding, instruction following, and long-context understanding',
 					},
 					{
-						name: 'OpenAI Text Embedding 3 (small)',
-						value: 'openai/text-embedding-3-small',
-						description:
-							'Text-embedding-3 series models are the latest and most capable embedding model from OpenAI.',
+						name: 'OpenAI GPT-4.1-Mini',
+						value: 'openai/gpt-4.1-mini',
+						description: 'Gpt-4.1-mini outperform gpt-4o-mini across the board, with major gains in coding, instruction following, and long-context handling',
 					},
 					{
-						name: 'OpenAI Text Embedding 3 (large)',
-						value: 'openai/text-embedding-3-large',
-						description:
-							'Text-embedding-3 series models are the latest and most capable embedding model from OpenAI.',
-					},
-					{
-						name: 'OpenAI o3-mini',
-						value: 'openai/o3-mini',
-						description:
-							'o3-mini includes the o1 features with significant cost-efficiencies for scenarios requiring high performance.',
-					},
-					{
-						name: 'OpenAI o1-preview',
-						value: 'openai/o1-preview',
-						description:
-							'Focused on advanced reasoning and solving complex problems, including math and science tasks. Ideal for applications that require...',
-					},
-					{
-						name: 'OpenAI o1-mini',
-						value: 'openai/o1-mini',
-						description:
-							'Smaller, faster, and 80% cheaper than o1-preview, performs well at code generation and small context operations.',
-					},
-					{
-						name: 'OpenAI o1',
-						value: 'openai/o1',
-						description:
-							'Focused on advanced reasoning and solving complex problems, including math and science tasks. Ideal for applications that require...',
+						name: 'OpenAI GPT-4.1-Nano',
+						value: 'openai/gpt-4.1-nano',
+						description: 'Gpt-4.1-nano provides gains in coding, instruction following, and long-context handling along with lower latency and cost',
 					},
 					{
 						name: 'OpenAI GPT-4o',
 						value: 'openai/gpt-4o',
-						description:
-							"OpenAI's most advanced multimodal model in the gpt-4o family. Can handle both text and image inputs.",
+						description: "OpenAI's most advanced multimodal model in the gpt-4o family. Can handle both text and image inputs.",
 					},
 					{
-						name: 'OpenAI GPT-4o mini',
+						name: 'OpenAI GPT-4o Mini',
 						value: 'openai/gpt-4o-mini',
-						description: 'An affordable, efficient AI solution for diverse text and image tasks.',
+						description: 'An affordable, efficient AI solution for diverse text and image tasks',
+					},
+					{
+						name: 'OpenAI O1',
+						value: 'openai/o1',
+						description: 'Focused on advanced reasoning and solving complex problems, including math and science tasks. Ideal for applications that require...',
+					},
+					{
+						name: 'OpenAI O1-Mini',
+						value: 'openai/o1-mini',
+						description: 'Smaller, faster, and 80% cheaper than o1-preview, performs well at code generation and small context operations',
+					},
+					{
+						name: 'OpenAI O1-Preview',
+						value: 'openai/o1-preview',
+						description: 'Focused on advanced reasoning and solving complex problems, including math and science tasks. Ideal for applications that require...',
+					},
+					{
+						name: 'OpenAI O3',
+						value: 'openai/o3',
+						description: 'O3 includes significant improvements on quality and safety while supporting the existing features of o1 and delivering comparable',
+					},
+					{
+						name: 'OpenAI O3-Mini',
+						value: 'openai/o3-mini',
+						description: 'O3-mini includes the o1 features with significant cost-efficiencies for scenarios requiring high performance',
+					},
+					{
+						name: 'OpenAI O4-Mini',
+						value: 'openai/o4-mini',
+						description: 'O4-mini includes significant improvements on quality and safety while supporting the existing features of o3-mini and delivering',
+					},
+					{
+						name: 'OpenAI Text Embedding 3 (Large)',
+						value: 'openai/text-embedding-3-large',
+						description: 'Text-embedding-3 series models are the latest and most capable embedding model from OpenAI',
+					},
+					{
+						name: 'OpenAI Text Embedding 3 (Small)',
+						value: 'openai/text-embedding-3-small',
+						description: 'Text-embedding-3 series models are the latest and most capable embedding model from OpenAI',
 					},
 				],
 				default: 'openai/gpt-4o',
@@ -195,7 +184,7 @@ export class GhModelsNode implements INodeType {
 						],
 					},
 					{
-						displayName: 'Max tokens',
+						displayName: 'Max Tokens',
 						name: 'max_tokens',
 						values: [
 							{
@@ -212,9 +201,9 @@ export class GhModelsNode implements INodeType {
 				displayName: 'Output as JSON',
 				name: 'json_format',
 				default: false,
-				description: "Model will send output as a JSON data.",
-				type: 'boolean'
-			}
+				description: "Whether the model will send output as JSON data",
+				type: 'boolean',
+			},
 		],
 	};
 
@@ -223,40 +212,70 @@ export class GhModelsNode implements INodeType {
 	// with whatever the user has entered.
 	// You can make async calls and use `await`.
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
+		const endPoint: string = 'https://models.github.ai/inference/chat/completions';
+
 		const items = this.getInputData();
+		const returnData: INodeExecutionData[] = [];
 
-		let item: INodeExecutionData;
-		let myString: string;
-
-		// Iterates over all input items and add the key "myString" with the
-		// value the parameter "myString" resolves to.
-		// (This could be a different value for each item in case it contains an expression)
-		for (let itemIndex = 0; itemIndex < items.length; itemIndex++) {
+		for (let i = 0; i < items.length; i++) {
 			try {
-				myString = this.getNodeParameter('myString', itemIndex, '') as string;
-				item = items[itemIndex];
+				const modelName = this.getNodeParameter('modelName', i) as string;
+				const rawMessages = this.getNodeParameter('messages', i, []) as {
+					message: Array<{ prompt: string; role: string }>;
+				};
+				const rawOptions = this.getNodeParameter('options', i, {}) as any;
 
-				item.json.myString = myString;
+				const jsonFormat = this.getNodeParameter('json_format', i, false) as boolean;
+
+				// Chuyển đổi định dạng messages
+				const messages = rawMessages.message.map((m) => ({
+					role: m.role,
+					content: m.prompt,
+				}));
+
+				// Lấy credentials đã được mã hóa
+				const credentials = await this.getCredentials('ghModelsNodeCredentialsApi');
+				const token = credentials.githubToken;
+
+				// Build payload
+				const body: Record<string, any> = {
+					model: modelName,
+					messages,
+					...Object.fromEntries(
+						Object.entries(rawOptions).map(([k, v]: [string, any]) => [k, v.value]),
+					),
+				};
+
+				// Gọi API
+				const response = await axios.post(endPoint, body, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+						'Content-Type': 'application/json',
+					},
+				});
+
+				// Ghi kết quả vào item output
+				const output = jsonFormat
+					? response.data
+					: { result: response.data.choices?.[0]?.message?.content || null };
+
+				returnData.push({
+					json: output,
+				});
 			} catch (error) {
-				// This node should never fail but we want to showcase how
-				// to handle errors.
 				if (this.continueOnFail()) {
-					items.push({ json: this.getInputData(itemIndex)[0].json, error, pairedItem: itemIndex });
-				} else {
-					// Adding `itemIndex` allows other workflows to handle this error
-					if (error.context) {
-						// If the error thrown already contains the context property,
-						// only append the itemIndex
-						error.context.itemIndex = itemIndex;
-						throw error;
-					}
-					throw new NodeOperationError(this.getNode(), error, {
-						itemIndex,
+					returnData.push({
+						json: { error: error.message },
+						pairedItem: { item: i },
 					});
+
+					continue;
 				}
+
+				throw new NodeOperationError(this.getNode(), error, { itemIndex: i });
 			}
 		}
 
-		return [items];
+		return [returnData];
 	}
 }
