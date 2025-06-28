@@ -1,0 +1,5 @@
+onlyBuiltDependencies:
+  - eslint-plugin-n8n-nodes-base
+
+overrides:
+  n8n-nodes-gh-models: link:../../.local/share/pnpm/global/5/node_modules/n8n-nodes-gh-models

@@ -1,19 +1,19 @@
 {
-  "name": "n8n-nodes-<...>",
-  "version": "0.1.0",
-  "description": "",
+  "name": "n8n-nodes-gh-models",
+  "version": "1.0.0",
+  "description": "Github cung cấp một lượng request miễn phí nhất định đến các AI model nổi tiếng. Node này thay thế quá trình tích hợp bằng http request phức tạp.",
   "keywords": [
     "n8n-community-node-package"
   ],
   "license": "MIT",
-  "homepage": "",
+  "homepage": "https://truonghaidang.com",
   "author": {
-    "name": "",
-    "email": ""
+    "name": "Trương Hải Đăng",
+    "email": "haidanghth910@gmail.com"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/<...>/n8n-nodes-<...>.git"
+    "url": "https://github.com/TruongHaiDang/n8n-gh-models.git"
   },
   "engines": {
     "node": ">=20.15"
@@ -37,19 +37,21 @@
       "dist/credentials/HttpBinApi.credentials.js"
     ],
     "nodes": [
-      "dist/nodes/ExampleNode/ExampleNode.node.js",
+      "dist/nodes/GhModelsNode/GhModelsNode.node.js",
       "dist/nodes/HttpBin/HttpBin.node.js"
     ]
   },
   "devDependencies": {
-    "@typescript-eslint/parser": "~8.32.0",
-    "eslint": "^8.57.0",
+    "@typescript-eslint/parser": "~8.35.0",
+    "eslint": "^9.29.0",
     "eslint-plugin-n8n-nodes-base": "^1.16.3",
-    "gulp": "^5.0.0",
-    "prettier": "^3.5.3",
-    "typescript": "^5.8.2"
+    "gulp": "^5.0.1",
+    "prettier": "^3.6.2",
+    "typescript": "^5.8.3"
   },
   "peerDependencies": {
     "n8n-workflow": "*"
+  },
+  "dependencies": {
   }
 }
