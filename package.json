@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Github cung cấp một lượng request miễn phí nhất định đến các AI model nổi tiếng. Node này thay thế quá trình tích hợp bằng http request phức tạp.",
   "keywords": [
+    "n8n-community-node-package",
     "n8n-nodes-gh-models",
     "n8n",
     "myservice",
