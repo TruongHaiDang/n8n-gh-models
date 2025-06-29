@@ -1,5 +1,6 @@
 import {
 	IAuthenticateGeneric,
+	ICredentialTestRequest,
 	ICredentialType,
 	INodeProperties,
 } from 'n8n-workflow';
@@ -28,8 +29,16 @@ export class GhModelsNodeCredentialsApi implements ICredentialType {
 		type: 'generic',
 		properties: {
 			headers: {
-				Authorization: 'Bearer {{ $credentials.githubToken }}',
+				// Authorization: 'Bearer {{ $credentials.githubToken }}',
+				Authorization: '={{"Bearer " + $credentials.githubToken}}',
 			},
+		},
+	};
+
+	test: ICredentialTestRequest = {
+		request: {
+			method: 'GET',
+			url: 'https://api.github.com/user',
 		},
 	};
 }
