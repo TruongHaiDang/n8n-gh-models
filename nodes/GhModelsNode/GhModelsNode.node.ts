@@ -1,11 +1,11 @@
 import type {
-	IExecuteFunctions,
-	INodeExecutionData,
-	INodeType,
-	INodeTypeDescription,
+        IExecuteFunctions,
+        INodeExecutionData,
+        INodeType,
+        INodeTypeDescription,
+        IHttpRequestOptions,
 } from 'n8n-workflow';
 import { NodeConnectionType, NodeOperationError } from 'n8n-workflow';
-import axios from 'axios';
 
 export class GhModelsNode implements INodeType {
 	description: INodeTypeDescription = {
@@ -213,11 +213,12 @@ export class GhModelsNode implements INodeType {
 		],
 	};
 
-	// The function below is responsible for actually doing whatever this node
-	// is supposed to do. In this case, we're just appending the `myString` property
-	// with whatever the user has entered.
-	// You can make async calls and use `await`.
-	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
+        /**
+         * Hàm thực thi chính của node.
+         * Nhận dữ liệu đầu vào, gọi GitHub Models API bằng httpRequest của n8n
+         * và trả về kết quả cho workflow.
+         */
+        async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 		const endPoint: string = 'https://models.github.ai/inference/chat/completions';
 
 		const items = this.getInputData();
@@ -252,18 +253,28 @@ export class GhModelsNode implements INodeType {
 					),
 				};
 
-				// Gọi API
-				const response = await axios.post(endPoint, body, {
-					headers: {
-						Authorization: `Bearer ${token}`,
-						'Content-Type': 'application/json',
-					},
-				});
+                                // Tùy chọn cho yêu cầu HTTP
+                                const requestOptions: IHttpRequestOptions = {
+                                        method: 'POST',
+                                        url: endPoint,
+                                        body,
+                                        headers: {
+                                                Authorization: `Bearer ${token}`,
+                                                'Content-Type': 'application/json',
+                                        },
+                                        json: true,
+                                };
+
+                                // Gọi API bằng httpRequest của n8n
+                                const response = (await this.helpers.httpRequest.call(
+                                        this,
+                                        requestOptions,
+                                )) as any;
 
 				// Ghi kết quả vào item output
-				const output = jsonFormat
-					? response.data
-					: { result: response.data.choices?.[0]?.message?.content || null };
+                                const output = jsonFormat
+                                        ? response
+                                        : { result: response.choices?.[0]?.message?.content || null };
 
 				returnData.push({
 					json: output,
