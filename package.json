@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-gh-models",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Github cung cấp một lượng request miễn phí nhất định đến các AI model nổi tiếng. Node này thay thế quá trình tích hợp bằng http request phức tạp.",
   "keywords": [
     "n8n-community-node-package",
@@ -42,7 +42,7 @@
   "n8n": {
     "n8nNodesApiVersion": 1,
     "credentials": [
-      "dist/credentials/ExampleCredentialsApi.credentials.js",
+      "dist/credentials/GhModelsNodeCredentialsApi.credentials.js",
       "dist/credentials/HttpBinApi.credentials.js"
     ],
     "nodes": [
