@@ -89,11 +89,11 @@ The node supports these AI models from GitHub Models:
    - **Max Tokens**: Maximum response length (default: 1024)
 4. **Output Format**: Choose between full JSON response or simplified content
 
-### Example Configurations
+### Configurations
 
 **Simple Chat:**
 
-```
+```bash
 Model: openai/gpt-4o
 Messages:
   - Prompt: "Hello, can you help me with n8n workflows?"
@@ -103,7 +103,7 @@ Output as JSON: false
 
 **System Instructions:**
 
-```
+```bash
 Model: openai/gpt-4.1
 Messages:
   - Prompt: "You are a helpful assistant specialized in workflow automation."
@@ -117,7 +117,7 @@ Options:
 
 **Complex Reasoning:**
 
-```
+```bash
 Model: openai/o1
 Messages:
   - Prompt: "Solve this step by step: [complex problem]"

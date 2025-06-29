@@ -12,9 +12,7 @@ export class GhModelsNodeCredentialsApi implements ICredentialType {
 	documentationUrl = 'https://qkxlimfz.manus.space/';
 
 	properties: INodeProperties[] = [
-		// The credentials to get from user and save encrypted.
-		// Properties can be defined exactly in the same way
-		// as node properties.
+
 		{
 			displayName: 'Github Token',
 			name: 'githubToken',
@@ -27,23 +25,12 @@ export class GhModelsNodeCredentialsApi implements ICredentialType {
 		},
 	];
 
-	// This credential is currently not used by any node directly
-	// but the HTTP Request node can use it to make requests.
-	// The credential is also testable due to the `test` property below
 	authenticate: IAuthenticateGeneric = {
 		type: 'generic',
 		properties: {
 			headers: {
 				Authorization: 'Bearer {{ $credentials.githubToken }}',
 			},
-		},
-	};
-
-	// The block below tells how this credential can be tested
-	test: ICredentialTestRequest = {
-		request: {
-			baseURL: 'https://example.com/',
-			url: '',
 		},
 	};
 }
