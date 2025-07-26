@@ -1,9 +1,10 @@
 import type {
-        IExecuteFunctions,
-        INodeExecutionData,
-        INodeType,
-        INodeTypeDescription,
-        IHttpRequestOptions,
+	IExecuteFunctions,
+	ILoadOptionsFunctions,
+	INodeExecutionData,
+	INodeType,
+	INodeTypeDescription,
+	IHttpRequestOptions,
 } from 'n8n-workflow';
 import { NodeConnectionType, NodeOperationError } from 'n8n-workflow';
 
@@ -31,79 +32,14 @@ export class GhModelsNode implements INodeType {
 			// Node properties which the user gets displayed and
 			// can change on the node.
 			{
-				displayName: 'Model',
+				displayName: 'Model Name or ID',
 				name: 'modelName',
 				type: 'options',
-				options: [
-					{
-						name: 'OpenAI GPT-4.1',
-						value: 'openai/gpt-4.1',
-						description: 'Gpt-4.1 outperforms gpt-4o across the board, with major gains in coding, instruction following, and long-context understanding',
-					},
-					{
-						name: 'OpenAI GPT-4.1-Mini',
-						value: 'openai/gpt-4.1-mini',
-						description: 'Gpt-4.1-mini outperform gpt-4o-mini across the board, with major gains in coding, instruction following, and long-context handling',
-					},
-					{
-						name: 'OpenAI GPT-4.1-Nano',
-						value: 'openai/gpt-4.1-nano',
-						description: 'Gpt-4.1-nano provides gains in coding, instruction following, and long-context handling along with lower latency and cost',
-					},
-					{
-						name: 'OpenAI GPT-4o',
-						value: 'openai/gpt-4o',
-						description: "OpenAI's most advanced multimodal model in the gpt-4o family. Can handle both text and image inputs.",
-					},
-					{
-						name: 'OpenAI GPT-4o Mini',
-						value: 'openai/gpt-4o-mini',
-						description: 'An affordable, efficient AI solution for diverse text and image tasks',
-					},
-					{
-						name: 'OpenAI O1',
-						value: 'openai/o1',
-						description: 'Focused on advanced reasoning and solving complex problems, including math and science tasks. Ideal for applications that require...',
-					},
-					{
-						name: 'OpenAI O1-Mini',
-						value: 'openai/o1-mini',
-						description: 'Smaller, faster, and 80% cheaper than o1-preview, performs well at code generation and small context operations',
-					},
-					{
-						name: 'OpenAI O1-Preview',
-						value: 'openai/o1-preview',
-						description: 'Focused on advanced reasoning and solving complex problems, including math and science tasks. Ideal for applications that require...',
-					},
-					{
-						name: 'OpenAI O3',
-						value: 'openai/o3',
-						description: 'O3 includes significant improvements on quality and safety while supporting the existing features of o1 and delivering comparable',
-					},
-					{
-						name: 'OpenAI O3-Mini',
-						value: 'openai/o3-mini',
-						description: 'O3-mini includes the o1 features with significant cost-efficiencies for scenarios requiring high performance',
-					},
-					{
-						name: 'OpenAI O4-Mini',
-						value: 'openai/o4-mini',
-						description: 'O4-mini includes significant improvements on quality and safety while supporting the existing features of o3-mini and delivering',
-					},
-					{
-						name: 'OpenAI Text Embedding 3 (Large)',
-						value: 'openai/text-embedding-3-large',
-						description: 'Text-embedding-3 series models are the latest and most capable embedding model from OpenAI',
-					},
-					{
-						name: 'OpenAI Text Embedding 3 (Small)',
-						value: 'openai/text-embedding-3-small',
-						description: 'Text-embedding-3 series models are the latest and most capable embedding model from OpenAI',
-					},
-				],
-				default: 'openai/gpt-4o',
-				description:
-					"OpenAI's most advanced multimodal model in the gpt-4o family. Can handle both text and image inputs.",
+				typeOptions: {
+					loadOptionsMethod: 'getAllModels',
+				},
+				default: '',
+				description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
 			},
 			{
 				displayName: 'Messages',
@@ -207,18 +143,42 @@ export class GhModelsNode implements INodeType {
 				displayName: 'Output as JSON',
 				name: 'json_format',
 				default: false,
-				description: "Whether the model will send output as JSON data",
+				description: 'Whether the model will send output as JSON data',
 				type: 'boolean',
 			},
 		],
 	};
+	methods = {
+		loadOptions: {
+			async getAllModels(this: ILoadOptionsFunctions) {
+				const credentials = await this.getCredentials('ghModelsNodeCredentialsApi');
+				const token = credentials.githubToken;
 
-        /**
-         * Hàm thực thi chính của node.
-         * Nhận dữ liệu đầu vào, gọi GitHub Models API bằng httpRequest của n8n
-         * và trả về kết quả cho workflow.
-         */
-        async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
+				const response = await this.helpers.httpRequest.call(this, {
+					method: 'GET',
+					url: 'https://models.github.ai/catalog/models',
+					headers: {
+						Authorization: `Bearer ${token}`,
+						Accept: 'application/vnd.github+json',
+					},
+					json: true,
+				});
+
+				return response.map((model: any) => ({
+					name: `${model.name || model.id} (${model.publisher})`,
+					value: model.id,
+					description: model.summary || model.description || '',
+				}));
+			},
+		},
+	};
+
+	/**
+	 * Hàm thực thi chính của node.
+	 * Nhận dữ liệu đầu vào, gọi GitHub Models API bằng httpRequest của n8n
+	 * và trả về kết quả cho workflow.
+	 */
+	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 		const endPoint: string = 'https://models.github.ai/inference/chat/completions';
 
 		const items = this.getInputData();
@@ -253,28 +213,25 @@ export class GhModelsNode implements INodeType {
 					),
 				};
 
-                                // Tùy chọn cho yêu cầu HTTP
-                                const requestOptions: IHttpRequestOptions = {
-                                        method: 'POST',
-                                        url: endPoint,
-                                        body,
-                                        headers: {
-                                                Authorization: `Bearer ${token}`,
-                                                'Content-Type': 'application/json',
-                                        },
-                                        json: true,
-                                };
+				// Tùy chọn cho yêu cầu HTTP
+				const requestOptions: IHttpRequestOptions = {
+					method: 'POST',
+					url: endPoint,
+					body,
+					headers: {
+						Authorization: `Bearer ${token}`,
+						'Content-Type': 'application/json',
+					},
+					json: true,
+				};
 
-                                // Gọi API bằng httpRequest của n8n
-                                const response = (await this.helpers.httpRequest.call(
-                                        this,
-                                        requestOptions,
-                                )) as any;
+				// Gọi API bằng httpRequest của n8n
+				const response = (await this.helpers.httpRequest.call(this, requestOptions)) as any;
 
 				// Ghi kết quả vào item output
-                                const output = jsonFormat
-                                        ? response
-                                        : { result: response.choices?.[0]?.message?.content || null };
+				const output = jsonFormat
+					? response
+					: { result: response.choices?.[0]?.message?.content || null };
 
 				returnData.push({
 					json: output,
