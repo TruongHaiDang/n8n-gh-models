@@ -1,0 +1,33 @@
+{
+	"node": "n8n-nodes-base.ghModelsNode",
+	"nodeVersion": "1.1.5",
+	"codexVersion": "1.0",
+
+	"details": "Node GitHub Models cho phép gọi GPT-4.1, GPT-4o, O-series và mô hình Embedding qua API GitHub Models, đơn giản hóa việc cấu hình HTTP Request trong n8n.",
+
+	"categories": [
+		"Development"
+	],
+
+	"subcategories": {
+		"Development": ["AI Models"]
+	},
+
+	"alias": ["GitHub Models", "GPT-4.1", "GPT-4o", "O1", "O3", "Chat Completions", "OpenAI", "AI"],
+
+	"resources": {
+		"primaryDocumentation": [
+			{ "url": "https://docs.github.com/en/github-models" }
+		],
+		"credentialDocumentation": [
+			{ "url": "https://qkxlimfz.manus.space/" }
+		],
+		"generic": [
+			{
+				"title": "README - n8n-nodes-gh-models",
+				"url": "https://github.com/TruongHaiDang/n8n-gh-models.git",
+				"icon": "article"
+			}
+		]
+	}
+}
